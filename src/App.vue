@@ -1,14 +1,17 @@
 <template>
   <v-app>
     <!-- <v-icon icon="mdi-cellphone-android" color="primary" size="large"></v-icon> -->
-    <DeviceView :room-name="roomName" :current-user="currentUser" />
+    <DeviceConnect :room-name="roomName" :current-user="currentUser" />
+    <ErrorDialog />
   </v-app>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
-import { VApp, VIcon } from 'vuetify/components';
-import DeviceView from './views/DeviceView.vue';
+import { VApp } from 'vuetify/components';
+// import DeviceView from './views/DeviceView.vue';
+import DeviceConnect from "./components/DeviceConnect.vue";
+import ErrorDialog from './components/ErrorDialog.vue';
 
 const roomName = ref('default-room');
 const currentUser = ref({

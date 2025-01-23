@@ -194,7 +194,7 @@ import { ref, onMounted, watch } from 'vue';
 import DeviceInstall from './DeviceInstall.vue';
 import { PackageManager } from "@yume-chan/android-bin";
 import type { PackageManagerListPackagesResult } from "@yume-chan/android-bin";
-import client from '../Scrcpy/adb-client';
+import client from '../device/adb-client';
 import { saveAs } from 'file-saver';
 
 interface ExtendedPackageInfo extends PackageManagerListPackagesResult {

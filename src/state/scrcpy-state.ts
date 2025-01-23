@@ -25,10 +25,10 @@ import { WebCodecsVideoDecoder } from '@yume-chan/scrcpy-decoder-webcodecs';
 
 // 导入本地依赖
 import { ScrcpyKeyboardInjector } from './input';
-import recorder from './recorder';
+import recorder from '../utils/recorder';
 
 // @ts-ignore
-import SCRCPY_SERVER_BIN from '../../../public/scrcpy-server-v2.6.1?binary';
+import SCRCPY_SERVER_BIN from '../../public/scrcpy-server-v2.6.1?binary';
 
 // 类型定义
 type RotationListener = (rotation: number, prevRotation: number) => void;

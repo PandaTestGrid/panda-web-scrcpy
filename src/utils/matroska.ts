@@ -11,7 +11,7 @@ import {
     h265SearchConfiguration,
 } from '@yume-chan/scrcpy';
 import { ArrayBufferTarget, Muxer as WebMMuxer } from 'webm-muxer';
-import { downloadFile } from './file';
+import { downloadFile } from '../state/file';
 
 // 定义数据包类型
 type ScrcpyDataPacket = Extract<ScrcpyMediaStreamPacket, { type: 'data' }>;

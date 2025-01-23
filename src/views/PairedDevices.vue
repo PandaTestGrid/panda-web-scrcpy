@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, shallowRef, watch, computed, onUnmounted } from 'vue';
-import client from '../Scrcpy/adb-client';
+import client from '../device/adb-client';
 import { AdbDaemonWebUsbDeviceWatcher, AdbDaemonWebUsbDevice } from '@yume-chan/adb-daemon-webusb';
 import DeviceGuide from './DeviceGuide.vue';
 

@@ -1,9 +1,9 @@
 <script setup>
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { AndroidKeyCode, AndroidKeyEventAction, AndroidScreenPowerMode } from '@yume-chan/scrcpy';
-import state from '../Scrcpy/scrcpy-state';
-import client from '../Scrcpy/adb-client';
-import recorder from '../Scrcpy/recorder';
+import state from '../state/scrcpy-state';
+import client from '../device/adb-client';
+import recorder from '../utils/recorder';
 
 const props = defineProps({
     direction: {

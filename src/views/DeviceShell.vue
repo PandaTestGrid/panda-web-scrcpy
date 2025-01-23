@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { encodeUtf8 } from '@yume-chan/adb';
-import client from '../Scrcpy/adb-client';
+import client from '../device/adb-client';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import 'xterm/css/xterm.css';

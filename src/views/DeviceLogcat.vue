@@ -120,7 +120,7 @@
 <script setup lang="ts">
 // 脚本部分保持不变
 import { ref, onUnmounted, shallowRef, computed, nextTick, onMounted, watch } from 'vue';
-import client from '../Scrcpy/adb-client';
+import client from '../device/adb-client';
 import {
     Logcat,
     AndroidLogPriority,

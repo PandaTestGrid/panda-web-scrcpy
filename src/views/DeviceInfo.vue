@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue';
 import DeviceBasicInfo from './DeviceBasicInfo.vue';
 import BatteryInfo from './BatteryInfo.vue';
 import StorageInfo from './StorageInfo.vue';
-import client from '../Scrcpy/adb-client';
+import client from '../device/adb-client';
 import { Adb } from '@yume-chan/adb';
 
 const device = computed(() => client.device || undefined);
