@@ -2,7 +2,7 @@
 import { ref, onMounted, shallowRef, watch, computed, onUnmounted } from 'vue';
 import client from '../device/adb-client';
 import { AdbDaemonWebUsbDeviceWatcher, AdbDaemonWebUsbDevice } from '@yume-chan/adb-daemon-webusb';
-import DeviceGuide from './DeviceGuide.vue';
+import DeviceGuide from '../components/DeviceGuide.vue';
 
 // 使用 Vue 3 的新语法定义 emit
 const emit = defineEmits(['pair-device', 'remove-device', 'update-connection-status']);

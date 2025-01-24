@@ -7,7 +7,7 @@ import {
     type ScrcpySetClipboardControlMessage,
 } from '@yume-chan/scrcpy';
 import client from '../device/adb-client';
-import state from '../state/scrcpy-state';
+import state from '../state/scrcpy';
 
 const videoContainer = ref<HTMLDivElement | null>(null);
 const videoWrapper = ref<HTMLDivElement | null>(null);

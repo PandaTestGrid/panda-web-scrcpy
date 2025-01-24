@@ -13,10 +13,10 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
-    "@yume-chan/adb": "^0.0.24",
+    "@yume-chan/adb": "0.0.24",
     "@yume-chan/adb-backend-webusb": "^0.0.19",
     "@yume-chan/adb-scrcpy": "^0.0.24",
-    "@yume-chan/adb-server-node-tcp": "^1.1.0",
+    "@yume-chan/adb-server-node-tcp": "^0.0.24",
     "@yume-chan/android-bin": "^0.0.24",
     "@yume-chan/aoa": "^0.0.24",
     "@yume-chan/event": "^0.0.24",

@@ -9,7 +9,7 @@ import DeviceInfo from "./DeviceInfo.vue";
 import AbstractList from "./AbstractList.vue";
 import VideoContainer from "./VideoContainer.vue";
 import NavigationBar from "./NavigationBar.vue";
-import state from "../state/scrcpy-state";
+import scrcpy from "../state";
 import AppManager from "./AppManager.vue";
 import DeviceSelectDrawer from './DeviceSelectDrawer.vue'
 import GitHubStats from '../components/GitHubStats.vue'
@@ -211,7 +211,7 @@ const showDeviceDrawer = ref(false);
           @update-connection-status="handleConnectionStatus"
         />
         <v-spacer />
-        
+
         <div class="d-flex align-center">
           <div class="d-flex align-center mx-2">
             <v-btn
@@ -243,8 +243,8 @@ const showDeviceDrawer = ref(false);
                 ref="DeviceContainerRef"
                 class="device-container"
               >
-                <div 
-                  ref="videoWrapperRef" 
+                <div
+                  ref="videoWrapperRef"
                   class="video-wrapper"
                   :style="{
                     width: `${containerDimensions.width}px`,
@@ -356,7 +356,7 @@ const showDeviceDrawer = ref(false);
   text-align: center;
   font-size: 16px;
   font-weight: 500;
-  
+
   .connection-status {
     margin-bottom: 16px;
     min-height: 60px;
@@ -487,7 +487,7 @@ const showDeviceDrawer = ref(false);
 .device-drawer {
   max-height: 80vh;
   border-radius: 0 0 16px 16px;
-  
+
   :deep(.v-navigation-drawer__content) {
     border-radius: 0 0 16px 16px;
     overflow: hidden;

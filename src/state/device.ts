@@ -10,7 +10,7 @@ export interface PacketLogItem extends AdbPacketData {
     payloadString?: string;
 }
 
-export class AdbState {
+export class Device {
     private _device: any = undefined;
     private _adb: Adb | undefined = undefined;
 
@@ -37,8 +37,9 @@ export class AdbState {
         // 记录到控制台以便调试
         console.info('Error:' +  message);
     }
+
 }
 
 // 创建全局单例
-export const ADB_STATE = new AdbState();
+export const DEVICE = new Device();
 

@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { AndroidKeyCode, AndroidKeyEventAction, AndroidScreenPowerMode } from '@yume-chan/scrcpy';
-import state from '../state/scrcpy-state';
+import state from '../state/scrcpy';
 import client from '../device/adb-client';
 import recorder from '../utils/recorder';
 

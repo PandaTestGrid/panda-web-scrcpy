@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- <v-icon icon="mdi-cellphone-android" color="primary" size="large"></v-icon> -->
-    <DeviceConnect :room-name="roomName" :current-user="currentUser" />
+    <AdbTess/>
     <ErrorDialog />
   </v-app>
 </template>
@@ -10,7 +10,7 @@
 import { ref } from 'vue';
 import { VApp } from 'vuetify/components';
 // import DeviceView from './views/DeviceView.vue';
-import DeviceConnect from "./components/DeviceConnect.vue";
+import AdbTess from "./views/AdbTest.vue";
 import ErrorDialog from './components/ErrorDialog.vue';
 
 const roomName = ref('default-room');
