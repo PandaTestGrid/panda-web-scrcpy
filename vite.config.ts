@@ -12,5 +12,8 @@ export default defineConfig({
     Markdown() as Plugin,
     Binary() as Plugin,
   ],
-  base: '/web-scrcpy/', // 设置为您的 GitHub 仓库名
+  base: '/web-scrcpy/',
+  optimizeDeps: {
+    exclude: ['@yume-chan/adb', '@yume-chan/adb-server-node-tcp']
+  },
 });

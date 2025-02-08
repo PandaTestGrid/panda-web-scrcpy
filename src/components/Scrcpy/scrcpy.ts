@@ -20,11 +20,11 @@ import type {
     ScrcpyMediaStreamConfigurationPacket,
     ScrcpyMediaStreamDataPacket,
 } from '@yume-chan/scrcpy';
-import { Consumable, InspectStream, ReadableStream, WritableStream } from '@yume-chan/stream-extra';
-import { WebCodecsVideoDecoder } from '@yume-chan/scrcpy-decoder-webcodecs';
+import {Consumable, InspectStream, ReadableStream, WritableStream} from '@yume-chan/stream-extra';
+import {WebCodecsVideoDecoder} from '@yume-chan/scrcpy-decoder-webcodecs';
 
 // 导入本地依赖
-import { ScrcpyKeyboardInjector } from './input';
+import {ScrcpyKeyboardInjector} from './input';
 import recorder from './recorder';
 
 // @ts-ignore
@@ -42,10 +42,9 @@ const DEFAULT_BORDER_WIDTH = 6;
 const DEFAULT_FPS = 30;
 const DEFAULT_BITRATE = 8000000;
 
-export class ScrcpyState {
+export class Scrcpy {
     // 基本状态
     running = false;
-    fullScreenContainer: HTMLDivElement | null = null;
     rendererContainer: HTMLDivElement | null = null;
     canvas?: HTMLCanvasElement;
     isFullScreen = false;
@@ -232,7 +231,7 @@ export class ScrcpyState {
     }
 
     // 启动方法
-    async start(device: AdbDaemonWebUsbDevice) {
+    async start(device: USBDevice) {
         if (!device || this.rendererContainer === undefined) {
             throw new Error('无效的参数');
         }
@@ -270,7 +269,7 @@ export class ScrcpyState {
             );
 
             if (!this.scrcpy) {
-                throw new Error('启动 scrcpy 客户端失败');
+                throw new Error('启动 core 客户端失败');
             }
 
             this.scrcpy.stdout.pipeTo(
@@ -283,10 +282,7 @@ export class ScrcpyState {
 
             if (this.scrcpy.videoStream) {
                 const videoStream = await this.scrcpy.videoStream;
-                if (!videoStream) {
-                    throw new Error('获取视频流失败');
-                }
-                const { metadata: videoMetadata, stream: videoPacketStream } = videoStream;
+                const {metadata: videoMetadata, stream: videoPacketStream} = videoStream;
                 // 初始化视频大小
                 this.width = videoMetadata.width ?? 0;
                 this.height = videoMetadata.height ?? 0;
@@ -304,7 +300,7 @@ export class ScrcpyState {
                                 try {
                                     if (this.isConfigurationPacket(packet)) {
                                         try {
-                                            const { croppedWidth, croppedHeight } =
+                                            const {croppedWidth, croppedHeight} =
                                                 h264ParseConfiguration(packet.data);
                                             if (croppedWidth > 0 && croppedHeight > 0) {
                                                 this.width = croppedWidth;
@@ -397,13 +393,24 @@ export class ScrcpyState {
     }
 
     setRendererContainer(container: HTMLDivElement): void {
-        if (this.decoder?.renderer) {
-            console.log('渲染器容器已更改', this.decoder);
-            this.rendererContainer = null;
-            container.removeChild(this.decoder.renderer);
+        // 移除旧的容器及其内容
+        const oldContainer = this.rendererContainer;
+        if (oldContainer) {
+            if (oldContainer.parentNode && oldContainer.parentNode.contains(oldContainer)) {
+                oldContainer.remove(); // 更安全的方式移除节点
+            }
         }
 
-        this.fullScreenContainer = container;
+        // 清除旧的解码器及其渲染器
+        if (this.decoder?.renderer) {
+            console.log('渲染器容器已更改', this.decoder);
+            if (container.contains(this.decoder.renderer)) {
+                container.removeChild(this.decoder.renderer);
+            }
+            this.decoder.dispose(); // 确保释放资源
+            this.decoder = null;
+        }
+
         this.rendererContainer = container;
 
         // 确保容器可以正确定位子元素
@@ -411,9 +418,13 @@ export class ScrcpyState {
         container.style.overflow = 'hidden';
         container.style.backgroundColor = 'transparent';
 
+        // 创建新的解码器并附加渲染器
         this.decoder = new WebCodecsVideoDecoder(ScrcpyVideoCodecId.H264, false);
-        container.appendChild(this.decoder.renderer);
-        this.canvas = this.decoder.renderer;
+        if (this.decoder?.renderer) {
+            container.appendChild(this.decoder.renderer);
+            this.canvas = this.decoder.renderer;
+        }
+
         // 初始化视频容器
         this.updateVideoContainer();
     }
@@ -453,5 +464,5 @@ export class ScrcpyState {
     }
 }
 
-const state = new ScrcpyState();
+const state = new Scrcpy();
 export default state;

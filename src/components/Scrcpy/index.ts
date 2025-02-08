@@ -1,1 +1,1 @@
-export * from './scrcpy-state';
+export * from './scrcpy';

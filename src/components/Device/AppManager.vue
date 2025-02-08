@@ -6,15 +6,19 @@
           <!-- 应用列表部分 -->
           <div class="app-list">
             <v-card class="d-flex flex-column h-100">
-              <v-card-title class="py-3 px-4 bg-primary-lighten-5 d-flex justify-space-between align-center">
+              <v-card-title
+                class="py-3 px-4 bg-primary-lighten-5 d-flex justify-space-between align-center"
+              >
                 <div class="d-flex align-center">
-                  <v-icon start color="primary" class="mr-2">mdi-format-list-bulleted</v-icon>
+                  <v-icon start color="primary" class="mr-2"
+                    >mdi-format-list-bulleted</v-icon
+                  >
                   <span class="text-h6">应用列表</span>
                 </div>
                 <div class="d-flex gap-2">
-                  <v-btn 
+                  <v-btn
                     color="primary"
-                    variant="tonal" 
+                    variant="tonal"
                     @click="refreshAppList"
                     :loading="loading"
                     prepend-icon="mdi-refresh"
@@ -49,10 +53,14 @@
                   <!-- 应用信息列 -->
                   <template v-slot:item.appInfo="{ item }">
                     <div class="d-flex align-center">
-                      <v-icon size="32" color="grey" class="mr-3">mdi-android</v-icon>
+                      <v-icon size="32" color="grey" class="mr-3"
+                        >mdi-android</v-icon
+                      >
                       <div>
                         <div class="font-weight-medium">{{ item.appName }}</div>
-                        <div class="text-caption text-grey">{{ item.packageName }}</div>
+                        <div class="text-caption text-grey">
+                          {{ item.packageName }}
+                        </div>
                       </div>
                     </div>
                   </template>
@@ -60,7 +68,9 @@
                   <!-- 版本号列 -->
                   <template v-slot:item.versionInfo="{ item }">
                     <div>
-                      <div class="font-weight-medium">版本号: {{ item.versionCode || '未知' }}</div>
+                      <div class="font-weight-medium">
+                        版本号: {{ item.versionCode || "未知" }}
+                      </div>
                     </div>
                   </template>
 
@@ -68,7 +78,10 @@
                   <template v-slot:item.installInfo="{ item }">
                     <div>
                       <div class="text-caption">来源: {{ item.installer }}</div>
-                      <div class="text-caption text-grey text-truncate" :title="item.sourceDir">
+                      <div
+                        class="text-caption text-grey text-truncate"
+                        :title="item.sourceDir"
+                      >
                         路径: {{ item.sourceDir }}
                       </div>
                     </div>
@@ -117,7 +130,9 @@
           <div class="app-install">
             <v-card class="h-100">
               <v-card-title class="py-3 px-4 bg-primary-lighten-5">
-                <v-icon start color="primary" class="mr-2">mdi-package-variant</v-icon>
+                <v-icon start color="primary" class="mr-2"
+                  >mdi-package-variant</v-icon
+                >
                 安装应用
               </v-card-title>
               <v-card-text class="overflow-auto">
@@ -150,16 +165,19 @@
     </v-dialog>
 
     <!-- 错误提示 -->
-    <v-snackbar v-model="showError" :color="errorType" timeout="3000" location="top">
+    <v-snackbar
+      v-model="showError"
+      :color="errorType"
+      timeout="3000"
+      location="top"
+    >
       {{ errorMessage }}
     </v-snackbar>
 
     <!-- 确认对话框 -->
     <v-dialog v-model="showConfirmDialog" max-width="400">
       <v-card>
-        <v-card-title class="text-h6">
-          确认卸载
-        </v-card-title>
+        <v-card-title class="text-h6"> 确认卸载 </v-card-title>
         <v-card-text>
           确定要卸载 <strong>{{ selectedApp?.appName }}</strong> 吗？
           <div class="text-caption mt-2">
@@ -190,12 +208,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
-import DeviceInstall from './DeviceInstall.vue';
+import { ref, onMounted, watch } from "vue";
+import DeviceInstall from "./DeviceInstall.vue";
 import { PackageManager } from "@yume-chan/android-bin";
 import type { PackageManagerListPackagesResult } from "@yume-chan/android-bin";
-import client from '../Scrcpy/adb-client';
-import { saveAs } from 'file-saver';
+import client from "../Scrcpy/client";
+import { saveAs } from "file-saver";
 
 interface ExtendedPackageInfo extends PackageManagerListPackagesResult {
   appName: string;
@@ -204,14 +222,14 @@ interface ExtendedPackageInfo extends PackageManagerListPackagesResult {
 }
 
 const loading = ref(false);
-const search = ref('');
+const search = ref("");
 const apps = ref<ExtendedPackageInfo[]>([]);
 const packageManager = ref<PackageManager | null>(null);
 const showError = ref(false);
-const errorMessage = ref('');
+const errorMessage = ref("");
 const showConfirmDialog = ref(false);
 const selectedApp = ref<ExtendedPackageInfo[]>([]);
-const errorType = ref<'error' | 'success'>('error');
+const errorType = ref<"error" | "success">("error");
 const showExportDialog = ref(false);
 const exportProgress = ref(0);
 const showInstallDialog = ref(false);
@@ -224,41 +242,41 @@ const refreshAppList = async () => {
   try {
     const pm = packageManager.value;
     const appList: ExtendedPackageInfo[] = [];
-    
+
     // 使用 spawnAndWaitLegacy 方法执行命令
     const output = await client.device.subprocess.spawnAndWaitLegacy([
-      'pm', 
-      'list', 
-      'packages', 
-      '-f', // showSourceDir
-      '-i', // showInstaller
-      '--show-versioncode', // showVersionCode
-      '-3'  // listThirdParty
+      "pm",
+      "list",
+      "packages",
+      "-f", // showSourceDir
+      "-i", // showInstaller
+      "--show-versioncode", // showVersionCode
+      "-3", // listThirdParty
     ]);
 
     // 处理输出结果
-    const lines = output.split('\n');
+    const lines = output.split("\n");
     for (const line of lines) {
       if (!line.trim()) continue;
-      
+
       try {
         const pkg = PackageManager.parsePackageListItem(line);
         appList.push({
           ...pkg,
-          appName: pkg.packageName.split('.').pop() || pkg.packageName,
+          appName: pkg.packageName.split(".").pop() || pkg.packageName,
           uninstalling: false,
-          exporting: false
+          exporting: false,
         });
       } catch (e) {
-        console.warn('解析包信息失败:', line, e);
+        console.warn("解析包信息失败:", line, e);
       }
     }
-    
+
     apps.value = appList;
   } catch (error) {
-    console.error('获取应用列表失败:', error);
+    console.error("获取应用列表失败:", error);
     showError.value = true;
-    errorMessage.value = '获取应用列表失败，请重试';
+    errorMessage.value = "获取应用列表失败，请重试";
   } finally {
     loading.value = false;
   }
@@ -274,27 +292,27 @@ const confirmUninstall = async () => {
 
   try {
     selectedApp.value[0].uninstalling = true;
-    
+
     const output = await client.device.subprocess.spawnAndWaitLegacy([
-      'pm',
-      'uninstall',
-      selectedApp.value[0].packageName
+      "pm",
+      "uninstall",
+      selectedApp.value[0].packageName,
     ]);
 
-    if (output.trim() !== 'Success') {
+    if (output.trim() !== "Success") {
       throw new Error(output);
     }
 
     await refreshAppList();
-    errorType.value = 'success';
+    errorType.value = "success";
     showError.value = true;
-    errorMessage.value = '应用卸载成功';
+    errorMessage.value = "应用卸载成功";
     showConfirmDialog.value = false;
   } catch (error) {
-    console.error('卸载应用失败:', error);
-    errorType.value = 'error';
+    console.error("卸载应用失败:", error);
+    errorType.value = "error";
     showError.value = true;
-    errorMessage.value = '卸载应用失败，请重试';
+    errorMessage.value = "卸载应用失败，请重试";
   } finally {
     if (selectedApp.value[0]) {
       selectedApp.value[0].uninstalling = false;
@@ -303,7 +321,7 @@ const confirmUninstall = async () => {
 };
 
 const handleInstallComplete = (success: boolean, message: string) => {
-  errorType.value = success ? 'success' : 'error';
+  errorType.value = success ? "success" : "error";
   showError.value = true;
   errorMessage.value = message;
   if (success) {
@@ -314,88 +332,87 @@ const handleInstallComplete = (success: boolean, message: string) => {
 
 const launchApp = async (app: ExtendedPackageInfo) => {
   if (!client.device) return;
-  
+
   try {
     await client.device.subprocess.spawnAndWaitLegacy([
-      'monkey',
-      '-p',
+      "monkey",
+      "-p",
       app.packageName,
-      '-c',
-      'android.intent.category.LAUNCHER',
-      '1'
+      "-c",
+      "android.intent.category.LAUNCHER",
+      "1",
     ]);
-    
-    errorType.value = 'success';
+
+    errorType.value = "success";
     showError.value = true;
-    errorMessage.value = '应用启动成功';
+    errorMessage.value = "应用启动成功";
   } catch (error) {
-    console.error('启动应用失败:', error);
-    errorType.value = 'error';
+    console.error("启动应用失败:", error);
+    errorType.value = "error";
     showError.value = true;
-    errorMessage.value = '启动应用失败，请重试';
+    errorMessage.value = "启动应用失败，请重试";
   }
 };
 
 const exportApk = async (app: ExtendedPackageInfo) => {
   if (!client.device) return;
-  
+
   app.exporting = true;
   exportingApp.value = app;
   showExportDialog.value = true;
   exportProgress.value = 0;
-  
+
   try {
     const sourceDir = app.sourceDir;
     if (!sourceDir) {
-      throw new Error('无法获取应用路径');
+      throw new Error("无法获取应用路径");
     }
 
-    const tempDir = '/data/local/tmp';
+    const tempDir = "/data/local/tmp";
     const tempFile = `${tempDir}/${app.packageName}.apk`;
-    
+
     await client.device.subprocess.spawnAndWaitLegacy([
-      'cp',
+      "cp",
       sourceDir,
-      tempFile
+      tempFile,
     ]);
 
     const sync = await client.device.sync();
     try {
       const stat = await sync.stat(tempFile);
       const stream = await sync.read(tempFile);
-      
+
       const reader = stream.getReader();
       const chunks: Uint8Array[] = [];
       const totalSize = Number(stat.size);
       let receivedLength = 0;
-      
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        
+
         chunks.push(value);
         receivedLength += value.length;
         exportProgress.value = (receivedLength / totalSize) * 100;
       }
-      
-      const blob = new Blob(chunks, { type: 'application/vnd.android.package-archive' });
+
+      const blob = new Blob(chunks, {
+        type: "application/vnd.android.package-archive",
+      });
       saveAs(blob, `${app.packageName}.apk`);
-      
-      errorType.value = 'success';
+
+      errorType.value = "success";
       showError.value = true;
-      errorMessage.value = 'APK导出成功';
+      errorMessage.value = "APK导出成功";
     } finally {
       await sync.dispose();
-      await client.device.subprocess.spawnAndWaitLegacy([
-        'rm',
-        tempFile
-      ]);
+      await client.device.subprocess.spawnAndWaitLegacy(["rm", tempFile]);
     }
   } catch (error) {
-    console.error('导出APK失败:', error);
-    errorType.value = 'error';
+    console.error("导出APK失败:", error);
+    errorType.value = "error";
     showError.value = true;
-    errorMessage.value = '导出APK失败，请重试';
+    errorMessage.value = "导出APK失败，请重试";
   } finally {
     app.exporting = false;
     exportingApp.value = null;
@@ -405,15 +422,18 @@ const exportApk = async (app: ExtendedPackageInfo) => {
 };
 
 // 监听设备连接状态
-watch(() => client.device, async (newDevice) => {
-  if (newDevice) {
-    packageManager.value = new PackageManager(newDevice);
-    await refreshAppList();
-  } else {
-    packageManager.value = null;
-    apps.value = [];
+watch(
+  () => client.device,
+  async (newDevice) => {
+    if (newDevice) {
+      packageManager.value = new PackageManager(newDevice);
+      await refreshAppList();
+    } else {
+      packageManager.value = null;
+      apps.value = [];
+    }
   }
-});
+);
 
 onMounted(() => {
   if (client.device) {
@@ -423,35 +443,35 @@ onMounted(() => {
 });
 
 const headers = [
-  { 
-    title: '应用信息',
-    key: 'appInfo',
-    align: 'start' as const,
+  {
+    title: "应用信息",
+    key: "appInfo",
+    align: "start" as const,
     sortable: false,
-    width: '300'
+    width: "300",
   },
   {
-    title: '版本信息',
-    key: 'versionInfo',
-    align: 'start' as const,
+    title: "版本信息",
+    key: "versionInfo",
+    align: "start" as const,
     sortable: true,
-    width: '150'
+    width: "150",
   },
   {
-    title: '安装信息',
-    key: 'installInfo',
-    align: 'start' as const,
+    title: "安装信息",
+    key: "installInfo",
+    align: "start" as const,
     sortable: false,
-    width: '300'
+    width: "300",
   },
   {
-    title: '操作',
-    key: 'actions',
-    align: 'center' as const,
+    title: "操作",
+    key: "actions",
+    align: "center" as const,
     sortable: false,
-    width: '250',
-    fixed: true
-  }
+    width: "250",
+    fixed: true,
+  },
 ];
 </script>
 
@@ -476,7 +496,8 @@ const headers = [
   max-height: 100%;
 }
 
-.app-list, .app-install {
+.app-list,
+.app-install {
   height: 100%;
   min-width: 0;
   display: flex;

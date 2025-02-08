@@ -9,10 +9,11 @@ import DeviceInfo from "../components/Device/DeviceInfo.vue";
 import AbstractList from "./AbstractList.vue";
 import VideoContainer from "../components/Device/VideoContainer.vue";
 import NavigationBar from "../components/Device/NavigationBar.vue";
-import state from "../components/Scrcpy/scrcpy-state";
+import state from "../components/Scrcpy/scrcpy.ts";
 import AppManager from "../components/Device/AppManager.vue";
-import DeviceSelectDrawer from '../components/Device/DeviceSelectDrawer.vue'
-import GitHubStats from '../components/Common/GitHubStats.vue'
+import DeviceSelectDrawer from "../components/Device/DeviceSelectDrawer.vue";
+import GitHubStats from "../components/Common/GitHubStats.vue";
+import AdbServerTest from "../components/Device/AdbServerTest.vue";
 
 const { width } = useDisplay();
 const showRightPanel = computed(() => width.value >= 960);
@@ -145,7 +146,7 @@ const updateContainerSize = () => {
 
 // 添加一个方法来确保容器尺寸已准备好
 const ensureContainerSize = () => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const checkSize = () => {
       updateContainerSize();
       if (containerSize.value.width > 0 && containerSize.value.height > 0) {
@@ -161,7 +162,7 @@ const ensureContainerSize = () => {
 onMounted(async () => {
   // 确保容器尺寸已准备好
   await ensureContainerSize();
-  window.addEventListener('resize', updateContainerSize);
+  window.addEventListener("resize", updateContainerSize);
 });
 
 onUnmounted(() => {
@@ -191,6 +192,7 @@ const tabs = [
   { title: "应用管理", icon: "mdi-android", component: AppManager },
   { title: "终端", icon: "mdi-console", component: DeviceShell },
   { title: "Logcat", icon: "mdi-android", component: DeviceLogcat },
+  { title: "ADB Server", icon: "mdi-android", component: AdbServerTest },
 ];
 
 const showDeviceDrawer = ref(false);
@@ -211,7 +213,7 @@ const showDeviceDrawer = ref(false);
           @update-connection-status="handleConnectionStatus"
         />
         <v-spacer />
-        
+
         <div class="d-flex align-center">
           <div class="d-flex align-center mx-2">
             <v-btn
@@ -225,7 +227,7 @@ const showDeviceDrawer = ref(false);
             </v-btn>
             <GitHubStats />
           </div>
-          
+
           <v-btn
             icon
             class="mx-1"
@@ -245,7 +247,7 @@ const showDeviceDrawer = ref(false);
               />
             </svg>
           </v-btn>
-          
+
           <v-btn
             variant="text"
             class="text-none"
@@ -273,12 +275,12 @@ const showDeviceDrawer = ref(false);
                 ref="DeviceContainerRef"
                 class="device-container"
               >
-                <div 
-                  ref="videoWrapperRef" 
+                <div
+                  ref="videoWrapperRef"
                   class="video-wrapper"
                   :style="{
                     width: `${containerDimensions.width}px`,
-                    height: `${containerDimensions.height}px`
+                    height: `${containerDimensions.height}px`,
                   }"
                 >
                   <VideoContainer />
@@ -316,10 +318,14 @@ const showDeviceDrawer = ref(false);
                     </v-btn>
                   </div>
                   <div class="text-h6">
-                    {{ state.connecting ? '正在连接设备...' : '连接设备' }}
+                    {{ state.connecting ? "正在连接设备..." : "连接设备" }}
                   </div>
                   <div class="text-body-2">
-                    {{ state.connecting ? '请稍候...' : '请确保设备已开启USB调试模式' }}
+                    {{
+                      state.connecting
+                        ? "请稍候..."
+                        : "请确保设备已开启USB调试模式"
+                    }}
                   </div>
                 </div>
               </div>
@@ -386,7 +392,7 @@ const showDeviceDrawer = ref(false);
   text-align: center;
   font-size: 16px;
   font-weight: 500;
-  
+
   .connection-status {
     margin-bottom: 16px;
     min-height: 60px;
@@ -517,7 +523,7 @@ const showDeviceDrawer = ref(false);
 .device-drawer {
   max-height: 80vh;
   border-radius: 0 0 16px 16px;
-  
+
   :deep(.v-navigation-drawer__content) {
     border-radius: 0 0 16px 16px;
     overflow: hidden;

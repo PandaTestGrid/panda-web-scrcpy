@@ -11,7 +11,7 @@ export interface DeviceMeta {
     }>;
 }
 
-export class AdbClient {
+export class Client {
     device: Adb | undefined;
     serial: string | undefined;
     name: string | undefined;
@@ -31,10 +31,6 @@ export class AdbClient {
 
     get deviceName() {
         return this.name;
-    }
-
-    get deviceSerial() {
-        return this.serial;
     }
 
     async connect(deviceMeta: DeviceMeta) {
@@ -84,5 +80,5 @@ export class AdbClient {
     }
 }
 
-const client = new AdbClient();
+const client = new Client();
 export default client;
